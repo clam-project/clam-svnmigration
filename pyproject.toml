@@ -1,0 +1,16 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "repomigrate"
+version = "0.1.0"
+description = "Herramienta de migración SVN a Git"
+requires-python = ">=3.10"
+dependencies = [
+    "typer>=0.9.0",
+    "consolemsg>=0.3.0",
+]
+
+[project.scripts]
+repomigrate = "repomigrate.cli:app"
