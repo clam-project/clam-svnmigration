@@ -1,0 +1,11 @@
+prefer git
+
+# SVN revision as git trailer
+=C append "\nSVN-Revision: %LEGACY%" --legacy
+=C filter replace /SVN-Revision: SVN:/SVN-Revision: /c
+
+# Delete unlabeled-[cvs-branch], they are broken leftovers of deleted cvs branches (see notes.md)
+branch delete /unlabeled-/
+
+# Fix GraphicsViewNetworkCanvas: files are at root but should be under NetworkEditor/ (see notes.md)
+# TODO: path rename not working in reposurgeon, using git filter-repo post-migration
