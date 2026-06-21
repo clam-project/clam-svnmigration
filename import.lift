@@ -7,5 +7,6 @@ prefer git
 # Delete unlabeled-[cvs-branch], they are broken leftovers of deleted cvs branches (see notes.md)
 branch delete /unlabeled-/
 
-# Fix GraphicsViewNetworkCanvas: files are at root but should be under NetworkEditor/ (see notes.md)
-# TODO: path rename not working in reposurgeon, using git filter-repo post-migration
+# Empty commit tags: append SVN-Revision trailer and delete tag
+script generated/emptycommits.lift
+

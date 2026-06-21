@@ -13,6 +13,7 @@ CHECKSUM_FILES=(
     "import.sh"
     "repomigrate/cli.py"
     "import.lift"
+    "emptycommits.tsv"
 )
 
 next_repo() {
@@ -40,6 +41,13 @@ next_repo() {
 }
 
 REPO_DIR=$(next_repo "$REPO_PREFIX" "${CHECKSUM_FILES[@]}")
+
+step Generate emptycommits.lift from emptycommits.tsv
+mkdir -p generated
+tail -n +2 emptycommits.tsv | while IFS=$'\t' read tagged removed; do
+    echo "<${tagged}> append \"\\nSVN-Revision: ${removed}\""
+    echo "tag delete /emptycommit-${removed}/"
+done > generated/emptycommits.lift
 
 step Import from $DUMP_FILE
 run reposurgeon "read <$DUMP_FILE" "script import.lift" "rebuild $REPO_DIR"
