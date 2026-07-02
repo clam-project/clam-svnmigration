@@ -1,6 +1,7 @@
 from dataclasses import dataclass
+from typing import Self
 
-MARKER = b"Revision-number: "
+REVISION_MARKER = b"Revision-number: "
 
 @dataclass
 class SvnRevision:
@@ -12,27 +13,34 @@ class SvnDump:
     header: bytes
     revisions: list[SvnRevision]
 
+    @classmethod
+    def parse(cls, data: bytes) -> Self:
+        positions = []
+        start = 0
+        while True:
+            pos = data.find(REVISION_MARKER, start)
+            if pos == -1:
+                break
+            positions.append(pos)
+            start = pos + 1
+
+        header = data[:positions[0]]
+        revisions = []
+        for i, pos in enumerate(positions):
+            end = positions[i + 1] if i + 1 < len(positions) else len(data)
+            rev_raw = data[pos:end]
+            newline = rev_raw.find(b"\n")
+            rev_num = int(rev_raw[len(REVISION_MARKER):newline])
+            revisions.append(SvnRevision(number=rev_num, raw=rev_raw))
+
+        return cls(header=header, revisions=revisions)
+
+    def dump(self) -> bytes:
+        return self.header + b"".join(rev.raw for rev in self.revisions)
+
 
 def parse_svndump(data: bytes) -> SvnDump:
-    positions = []
-    start = 0
-    while True:
-        pos = data.find(MARKER, start)
-        if pos == -1:
-            break
-        positions.append(pos)
-        start = pos + 1
-
-    header = data[:positions[0]]
-    revisions = []
-    for i, pos in enumerate(positions):
-        end = positions[i + 1] if i + 1 < len(positions) else len(data)
-        rev_raw = data[pos:end]
-        newline = rev_raw.find(b"\n")
-        rev_num = int(rev_raw[len(MARKER):newline])
-        revisions.append(SvnRevision(number=rev_num, raw=rev_raw))
-
-    return SvnDump(header=header, revisions=revisions)
+    return SvnDump.parse(data)
 
 def dump_svndump(dump: SvnDump) -> bytes:
-    return dump.header + b"".join(rev.raw for rev in dump.revisions)
+    return dump.dump()
