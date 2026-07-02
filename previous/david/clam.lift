@@ -1,0 +1,106 @@
+# Load the project into main memory
+# Warning: this command is slow because Subversion is slow.
+#read <clam.svn # already done by other step
+
+# Map Subversion usernames to Git-style user IDs.  In a real
+# conversion you'd probably have a lot more of these and you'd
+# probably read them in from a separate file, not a heredoc.
+#authors read < clam.map # already done by other step
+set interactive
+set echo
+
+# Massage comments into Git-like form (with a topic sentence and a
+# spacer line after it if there is following running text). Only
+# done when the first line is syntactically recognizable as a whole
+# sentence.
+gitify
+
+# Tags with the name prefix emptycommit were branch-creation commits
+# in Subversion. Usually there's nothing interesting in the comment
+# text, but you'll want to browse them and check.  These commands
+# save one such tag and delete the rest
+#tag emptycommit-23 noteworthy
+tag /emptycommit/ delete
+
+tag CLAM_Annotator-0_3_2-rel create <v0_3_2-rel>
+tag CLAM_Annotator-0_2_0-rel create <v0_2_0-rel>
+tag CLAM_NetworkEditor-0_3_2-rel create <v0_3_2-rel>
+tag CLAM_NetworkEditor-0_3_1-rel create <v0_3_1-rel>
+tag CLAM_NetworkEditor-0_3_0-rel create <v0_3_0-rel>
+tag CLAM_SMSTools-0_3_0-rel create <v0_3_0-rel>
+tag CLAM_SMSTools-0_4_1-rel create <v0_4_1-rel>
+tag CLAM_SMSTools-0_4_0-rel create <v0_4_0-rel>
+tag CLAM_NetworkEditor-0_2_0-rel create <v0_2-rel>
+tag CLAM_SMSTools-0_2_0-rel create <v0_2-rel>
+tag CLAM_Voice2MIDI-0_2_0-rel create <v0_2-rel>
+tag CLAM_NetworkEditor-0_1_0-rel create <v0_1-rel>
+tag CLAM_Annotator-0_1_0-rel create <v0_1-rel>
+tag CLAM_Voice2MIDI-0_1_0-rel create <v0_1-rel>
+tag CLAM_SMSTools-0_3-rel create <v0_3-rel>
+#tag CLAM-0.4.0-rel create <release-0_4-rel>
+
+branch /unlabeled-/ delete
+
+tag v0_2-lastmerge rename CLAM_Annotator-0_2-lastmerge
+tag v0_2-lastmerge-rel rename CLAM_Annotator-0_2-lastmerge-rel
+
+#tag CLAM-NewPorts-root delete
+
+
+# Often, your Subversion repository was a CVS repository in a past
+# life. CVS creates tags named with the suffix "-root" to mark branch
+# points, and cv2svn blindly copies them even though the Subversion
+# tools don't need that marker. This clutter can be tossed.
+tag /-root$/ delete
+
+#/^This commit was manufactured by cvs2svn to create tag/ squash --tagback
+/^This commit was manufactured by cvs2svn to create tag/ squash --tagback
+
+# This command illustrates how to use msgin to modify the comment
+# text of a commit. In this test we're patching a Subversion revision
+# reference because we're going to want to reference-lift it later.
+# But this capability could also be used, for example, to add an
+# update note to a commit comment that turned out to be incorrect.
+#msgin <<EOF
+#Legacy-ID: 23
+#Check-Text: Referring back to r2.
+#
+#Referring back to [[SVN:2]].
+#EOF
+
+# Change cookies like [[SVN:2]] into action stamps that are independent
+# of the VCS in use. A typical action stamp looks like this:
+# <jrh@random.org!2006-08-14T02:34:56Z>
+#references lift
+
+graph $1 >/tmp/foo$$
+shell dot </tmp/foo$$ -Tpng -o clam.png; rm /tmp/foo$$
+
+# Sometimes it's useful to drop files from the repo that should
+# never have been checked in.
+#1,$ expunge :documents/.*.pdf:
+expunge CLAM/plugins/timeDomainEffects/ladspa/time_domain_effects_plugins.os
+expunge CLAM/plugins/temporal_oboeSynthesizer/SimpleOboeSynthesizer.xcodeproj/yushen.pbxuser
+
+# Process GNU Changelogs to get better attributions for changesets.
+# When a commit was derived from a patch and checked in by someone
+# other than its author this can often correct the commit attribution.
+changelogs
+
+lint
+
+# It's good practice to add a tag marking the point of conversion.
+tag cutover-git create @max(=C)
+msgin <<EOF
+Tag-Name: cutover-git
+Tagger: J. Random Hacker <jrh@random.org> America/Los_Angeles
+
+This tag marks the last Subversion commit before the move to Git.
+EOF
+
+# We want to write a Git repository
+prefer git
+
+# Do it
+rebuild clam-git
+
