@@ -5,5 +5,6 @@ def test_roundtrip_raw():
         original = f.read()
     dump = parse_svndump(original)
     assert dump_svndump(dump) == original
+    assert len(dump.revisions) == 15457
 
 
