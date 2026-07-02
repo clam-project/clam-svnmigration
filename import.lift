@@ -1,5 +1,6 @@
 prefer git
 
+
 # SVN revision as git trailer
 =C append "\nSVN-Revision: %LEGACY%" --legacy
 =C filter replace /SVN-Revision: SVN:/SVN-Revision: /c
