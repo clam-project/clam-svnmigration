@@ -7,5 +7,7 @@ def test_roundtrip_raw():
     assert dump_svndump(dump) == original
     assert len(dump.revisions) == 15457
     assert dump.revisions[-1].number == 15457 -1
+    assert len(dump.revisions[-1].nodes) == 1
+    assert len(dump.revisions[0].nodes) == 0
 
 
