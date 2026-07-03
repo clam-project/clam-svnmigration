@@ -12,6 +12,10 @@ def sha1(data: bytes) -> bytes:
 REVISION_MARKER = b"Revision-number: "
 NODE_MARKER = b"Node-path: "
 
+def binaryLength(content):
+    if content is None: return None
+    return str(len(content)).encode()
+
 def parse_fields(header: bytes) -> OrderedDict:
     fields = OrderedDict()
     for line in header.split(b"\n"):
@@ -73,31 +77,45 @@ class SvnNode:
             properties = parse_kv_properties(properties_chunk+PROPS_END)
         content = None
         content_length = fields.get(b'Text-content-length', None)
-        content_length = content_length and int(content_length.decode())
         if content_length is not None:
 
             content = remaining[:-2]
             remaining = remaining[-2:]
+
+            assert binaryLength(content) == content_length, (
+                f"{content_length.decode()} vs {len(content.decode())}"
+            )
+
             stored_md5 = fields.get(b"Text-content-md5")
             if stored_md5 is not None:
                 assert md5(content) == stored_md5, (
                     f"md5: {md5(content).decode()} != {stored_md5.decode()}"
                 )
+
             stored_sha1 = fields.get(b"Text-content-sha1")
             if stored_sha1 is not None:
                 assert sha1(content) == stored_sha1, (
                     f"sha1: {sha1(content).decode()} != {stored_sha1.decode()}"
                 )
-            assert len(content) == content_length, (
-                f"{content_length} vs {len(content)}"
-            )
+
             assert remaining == b"\n\n", (
                 f"remaining: <{remaining}>"
             )
         else:
+            # TODO: We should be able to predict which trailing goes
             assert remaining in (b"\n\n", b"\n", b""), (
                 f"header: <{header}>\nremaining: <{remaining}>"
             )
+        stored_full_length = fields.get(b"Content-length", None)
+        computed_full_length = None
+        if content is not None or properties is not None:
+            computed_full_length = binaryLength(
+                (content or b"") +
+                (properties_chunk if properties is not None else b"")
+            )
+        assert stored_full_length == computed_full_length, (
+            f"full length {stored_full_length} vs {computed_full_length}"
+        )
 
         return cls(fields=fields, properties=properties, content=content, raw=remaining)
 
@@ -105,11 +123,19 @@ class SvnNode:
         props = b""
         if self.properties != None:
             props = dump_kv_properties(self.properties)
-            self.fields[b"Prop-content-length"] = str(len(props)).encode()
+            self.fields[b"Prop-content-length"] = binaryLength(props)
+        content = b""
+        if self.content != None:
+            content = self.content
+            self.fields[b"Text-content-length"] = binaryLength(content)
+
+        if self.content != None or self.properties != None:
+            self.fields[b"Content-length"] = binaryLength(content + props)
+
         result = dump_fields(self.fields) + b"\n\n"
         result += props
-        if self.content is not None:
-            result += self.content
+        result += content
+        # TODO: We shoudl be able to predict which trailing goes
         return result + self.raw
 
 @dataclass
