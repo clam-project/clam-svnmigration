@@ -44,7 +44,8 @@ def parse_kv_properties(data: bytes) -> OrderedDict:
 def dump_fields(fields: OrderedDict) -> bytes:
     return b"\n".join(k + b": " + v for k, v in fields.items())
 
-def dump_kv_properties(properties: OrderedDict) -> bytes:
+def dump_kv_properties(properties: OrderedDict | None) -> bytes:
+    if properties is None: return None
     props = b""
     for k, v in properties.items():
         props += b"K " + str(len(k)).encode() + b"\n" + k + b"\n"
@@ -120,13 +121,13 @@ class SvnNode:
         return cls(fields=fields, properties=properties, content=content, raw=remaining)
 
     def dump(self) -> bytes:
-        props = b""
+        props = dump_kv_properties(self.properties) or b""
+        content = self.content or b""
+
         if self.properties != None:
-            props = dump_kv_properties(self.properties)
             self.fields[b"Prop-content-length"] = binaryLength(props)
-        content = b""
+
         if self.content != None:
-            content = self.content
             self.fields[b"Text-content-length"] = binaryLength(content)
 
         if self.content != None or self.properties != None:
@@ -135,6 +136,7 @@ class SvnNode:
         result = dump_fields(self.fields) + b"\n\n"
         result += props
         result += content
+
         # TODO: We shoudl be able to predict which trailing goes
         return result + self.raw
 
