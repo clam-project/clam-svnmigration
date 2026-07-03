@@ -23,7 +23,10 @@ class SvnDump:
     def parse(cls, data: bytes) -> Self:
         parts = data.split(REVISION_MARKER)
         header = parts[0]
-        revisions = [SvnRevision.parse(REVISION_MARKER + part) for part in parts[1:]]
+        revisions = [
+            SvnRevision.parse(REVISION_MARKER + part)
+            for part in parts[1:]
+        ]
         return cls(header=header, revisions=revisions)
 
     def dump(self) -> bytes:
