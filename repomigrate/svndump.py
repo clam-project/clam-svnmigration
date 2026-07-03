@@ -95,7 +95,7 @@ class SvnNode:
                 f"remaining: <{remaining}>"
             )
         else:
-            assert remaining == b"\n\n" or remaining == b"\n" or remaining == b"", (
+            assert remaining in (b"\n\n", b"\n", b""), (
                 f"header: <{header}>\nremaining: <{remaining}>"
             )
 

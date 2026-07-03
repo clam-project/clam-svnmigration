@@ -1,23 +1,31 @@
 import sys
 from pathlib import Path
-
+from consolemsg import step
 import typer
-
 from .svndump import parse_svndump, dump_svndump
 
 
 def preprocess(
-    dump_file: Path = typer.Argument(..., help="Path to SVN dump file"),
+    input_dump_file: Path = typer.Argument(..., help="Path to the input SVN dump file"),
+    output_dump_file: Path = typer.Argument(..., help="Path to the output SVN dump file"),
 ):
     """Preprocess SVN dump: fix GraphicsViewNetworkCanvas branch paths."""
-    data = open(dump_file, "rb").read()
+
+    step(f"Reading {input_dump_file}")
+    data = input_dump_file.read_bytes()
     dump = parse_svndump(data)
 
+    step("Make GraphicsViewNetworkCanvas have directory")
     rev = dump.revisions[13369]
-    print(f"=== Revision {rev.number} ===")
-    print(rev.header.decode("latin-1"))
-    print()
-    for i, node in enumerate(rev.nodes):
-        print(f"--- Node {i} ---")
-        for k, v in node.fields.items():
-            print(f"  {k.decode()}: {v.decode()}")
+    rev.nodes[0].fields[b"Node-copyfrom-path"] = b"trunk"
+    for rev in dump.revisions[13370:]:
+        # Any reference to the branch should include NetworkEditor/
+        for node in rev.nodes:
+            node.fields[b"Node-path"] = node.fields[b"Node-path"].replace(
+                b"branches/GraphicsViewNetworkCanvas/",
+                b"branches/GraphicsViewNetworkCanvas/NetworkEditor/",
+            )
+
+    step(f"Writing {output_dump_file}")
+    output_dump_file.write_bytes(dump.dump())
+
