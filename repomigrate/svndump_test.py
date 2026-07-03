@@ -13,6 +13,6 @@ def test_roundtrip_raw():
         b'/*\n * Copyright (c) 2001-2004 MUSIC TECHNOLOGY'
     )
     assert dump.revisions[-1].nodes[0].content.endswith(
-        b';\n\treturn true;\n}\n\n\n\n\n\n'
+        b';\n\treturn true;\n}\n\n\n\n'
     )
 

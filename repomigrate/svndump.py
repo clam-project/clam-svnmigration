@@ -50,23 +50,38 @@ class SvnNode:
 
     @classmethod
     def parse(cls, raw: bytes) -> Self:
-        header_end = raw.find(b"\n\n")
-        header = raw[:header_end]
-        props_start = header_end + 2
-        props_end = raw.find(b"PROPS-END\n", props_start)
+        PROPS_END = b"PROPS-END\n"
 
+        header, remaining = raw.split(b"\n\n", 1)
         fields = parse_fields(header)
 
-        if props_end != -1:
-            props_section = raw[props_start:props_end + len(b"PROPS-END")]
-            properties = parse_kv_properties(props_section)
-            content_start = props_end + len(b"PROPS-END\n")
-            content = raw[content_start:] if content_start < len(raw) else None
+        properties = None
+        if PROPS_END in remaining:
+            props_length = int(fields[b"Prop-content-length"].decode())
+            properties_chunk, remaining = remaining.split(PROPS_END, 1)
+            properties_chunk += PROPS_END
+            assert len(properties_chunk) == props_length, (
+                f"{props_length} {len(properties_chunk)}"
+            )
+            properties = parse_kv_properties(properties_chunk+PROPS_END)
+        content = None
+        content_length = fields.get(b'Text-content-length', None)
+        content_length = content_length and int(content_length.decode())
+        if content_length is not None:
+            content = remaining[:-2]
+            remaining = remaining[-2:]
+            assert len(content) == content_length, (
+                f"{content_length} vs {len(content)}"
+            )
+            assert remaining == b"\n\n", (
+                f"remaining: <{remaining}>"
+            )
         else:
-            properties = None
-            content = raw[props_start:] if props_start < len(raw) else None
+            assert remaining == b"\n\n" or remaining == b"\n" or remaining == b"", (
+                f"header: <{header}>\nremaining: <{remaining}>"
+            )
 
-        return cls(fields=fields, properties=properties, content=content, raw=raw)
+        return cls(fields=fields, properties=properties, content=content, raw=remaining)
 
     def dump(self) -> bytes:
         props = b""
@@ -77,7 +92,7 @@ class SvnNode:
         result += props
         if self.content is not None:
             result += self.content
-        return result
+        return result + self.raw
 
 @dataclass
 class SvnRevision:
