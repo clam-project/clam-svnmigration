@@ -91,9 +91,12 @@ class SvnNode:
         return False
 
     def dump(self) -> bytes:
+        emit_props = self._should_emit_props()
+        props = dump_kv_properties(self.properties) if emit_props else b""
+        if emit_props:
+            self.fields[b"Prop-content-length"] = str(len(props)).encode()
         result = dump_fields(self.fields) + b"\n\n"
-        if self._should_emit_props():
-            result += dump_kv_properties(self.properties)
+        result += props
         if self.content is not None:
             result += self.content
         return result
