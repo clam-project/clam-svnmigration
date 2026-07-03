@@ -44,7 +44,7 @@ def dump_kv_properties(properties: OrderedDict) -> bytes:
 @dataclass
 class SvnNode:
     fields: OrderedDict
-    properties: OrderedDict
+    properties: OrderedDict | None
     content: bytes | None
     raw: bytes
 
@@ -63,32 +63,13 @@ class SvnNode:
             content_start = props_end + len(b"PROPS-END\n")
             content = raw[content_start:] if content_start < len(raw) else None
         else:
-            properties = OrderedDict()
+            properties = None
             content = raw[props_start:] if props_start < len(raw) else None
 
         return cls(fields=fields, properties=properties, content=content, raw=raw)
 
     def _should_emit_props(self) -> bool:
-        action = self.fields.get(b"Node-action")
-        kind = self.fields.get(b"Node-kind")
-        copy = b"Node-copyfrom-rev" in self.fields
-
-        if self.properties:
-            return True
-        if action == b"delete":
-            return False
-        if action in (b"add", b"replace") and not copy:
-            return True
-        if action == b"change" and kind == b"dir":
-            return True
-        if (copy and kind == b"file" and
-            self.fields.get(b"Text-copy-source-md5") == b"b8d297bf213f57e210708351d857c199"):
-            return True
-        # Fallback: 4 change file nocopy with empty PROPS-END
-        # (property deletions with empty KV section)
-        if b"Prop-content-length" in self.fields:
-            return True
-        return False
+        return self.properties != None
 
     def dump(self) -> bytes:
         emit_props = self._should_emit_props()
