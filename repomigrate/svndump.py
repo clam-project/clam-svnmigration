@@ -68,13 +68,10 @@ class SvnNode:
 
         return cls(fields=fields, properties=properties, content=content, raw=raw)
 
-    def _should_emit_props(self) -> bool:
-        return self.properties != None
-
     def dump(self) -> bytes:
-        emit_props = self._should_emit_props()
-        props = dump_kv_properties(self.properties) if emit_props else b""
-        if emit_props:
+        props = b""
+        if self.properties != None:
+            props = dump_kv_properties(self.properties)
             self.fields[b"Prop-content-length"] = str(len(props)).encode()
         result = dump_fields(self.fields) + b"\n\n"
         result += props
