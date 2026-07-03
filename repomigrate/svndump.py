@@ -1,6 +1,13 @@
 from collections import OrderedDict
 from dataclasses import dataclass
 from typing import Self
+import hashlib
+
+def md5(data: bytes) -> bytes:
+    return hashlib.md5(data).hexdigest().encode()
+
+def sha1(data: bytes) -> bytes:
+    return hashlib.sha1(data).hexdigest().encode()
 
 REVISION_MARKER = b"Revision-number: "
 NODE_MARKER = b"Node-path: "
@@ -68,8 +75,19 @@ class SvnNode:
         content_length = fields.get(b'Text-content-length', None)
         content_length = content_length and int(content_length.decode())
         if content_length is not None:
+
             content = remaining[:-2]
             remaining = remaining[-2:]
+            stored_md5 = fields.get(b"Text-content-md5")
+            if stored_md5 is not None:
+                assert md5(content) == stored_md5, (
+                    f"md5: {md5(content).decode()} != {stored_md5.decode()}"
+                )
+            stored_sha1 = fields.get(b"Text-content-sha1")
+            if stored_sha1 is not None:
+                assert sha1(content) == stored_sha1, (
+                    f"sha1: {sha1(content).decode()} != {stored_sha1.decode()}"
+                )
             assert len(content) == content_length, (
                 f"{content_length} vs {len(content)}"
             )
