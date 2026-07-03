@@ -9,11 +9,14 @@ import typer
 import requests
 from bs4 import BeautifulSoup
 from consolemsg import step, warn, success, error
+from .preprocess import preprocess
 
 app = typer.Typer(
     help="SVN to Git repository migration tool",
     invoke_without_command=True,
 )
+
+app.command()(preprocess)
 
 
 @app.callback()
