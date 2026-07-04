@@ -99,14 +99,16 @@ class SvnNode:
                     f"sha1: {sha1(content).decode()} != {stored_sha1.decode()}"
                 )
 
+        if properties is not None or content_length is not None:
             assert remaining == b"\n\n", (
                 f"remaining: <{remaining}>"
             )
         else:
             # TODO: We should be able to predict which trailing goes
-            assert remaining in (b"\n\n", b"\n", b""), (
+            assert remaining in (b"\n", b""), (
                 f"header: <{header}>\nremaining: <{remaining}>"
             )
+
         stored_full_length = fields.get(b"Content-length", None)
         computed_full_length = None
         if content is not None or properties is not None:
@@ -130,12 +132,15 @@ class SvnNode:
         if self.content != None:
             self.fields[b"Text-content-length"] = binaryLength(content)
 
-        if self.content != None or self.properties != None:
+        if self.properties != None or self.content != None:
             self.fields[b"Content-length"] = binaryLength(content + props)
 
         result = dump_fields(self.fields) + b"\n\n"
         result += props
         result += content
+
+        if self.content != None: return result + b"\n\n"
+        if self.properties != None: return result + b"\n\n"
 
         # TODO: We shoudl be able to predict which trailing goes
         return result + self.raw

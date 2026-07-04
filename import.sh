@@ -70,11 +70,13 @@ tag_from_tsv() {
     done
 }
 
-DUMP_FILE="clam.svn"
+ORIGINAL_DUMP_FILE="clam-original.svn"
+DUMP_FILE="clam-cleaned.svn"
 REPO_PREFIX="clam-git"
 
 # Files to track for versioning (exclude dump - slow and won't change)
 CHECKSUM_FILES=(
+    "$DUMP_FILE"
     "import.sh"
     "repomigrate/cli.py"
     "import.lift"
@@ -109,27 +111,29 @@ generate_empty_commits_lift() {
     mkdir -p generated
     tail -n +2 emptycommits.tsv | while IFS=$'\t' read tagged removed; do
         echo "<${tagged}> append \"\\nSVN-Revision: ${removed}\""
-        echo "tag delete /emptycommit-${removed}/"
+        #echo "tag delete /emptycommit-${removed}/"
     done > generated/emptycommits.lift
 }
 
 REPO_DIR=$(next_repo "$REPO_PREFIX" "${CHECKSUM_FILES[@]}")
 
+run repomigrate preprocess "${ORIGINAL_DUMP_FILE}" "${DUMP_FILE}"
+
 step Generate emptycommits.lift from emptycommits.tsv
 run generate_empty_commits_lift
 
 step Import from $DUMP_FILE
-run reposurgeon "read <$DUMP_FILE" "script import.lift" "rebuild $REPO_DIR"
+run reposurgeon "read --preserve <$DUMP_FILE" "script import.lift" "rebuild $REPO_DIR"
 
 # This is done now by fixCamvasBranch directly on the svndump before this script
 #step Fix GraphicsViewNetworkCanvas branch
 #MERGE_BASE=$(git -C "$REPO_DIR" merge-base GraphicsViewNetworkCanvas HEAD)
 #run git -C "$REPO_DIR" filter-repo --force --path-rename :NetworkEditor/ --refs ${MERGE_BASE}..GraphicsViewNetworkCanvas
 
-step Merge GraphicsViewNetworkCanvas to trunk
-run make_merge_commit  GraphicsViewNetworkCanvas 13429 $REPO_DIR
+#step Merge GraphicsViewNetworkCanvas to trunk
+#run make_merge_commit  GraphicsViewNetworkCanvas 13429 $REPO_DIR
 
-step Tag releases from tarballs
+#step Tag releases from tarballs
 run tag_from_tsv "$REPO_DIR" tarball-revisions.tsv
 
 success "Done: $REPO_DIR"
