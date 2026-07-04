@@ -70,6 +70,21 @@ tag_from_tsv() {
     done
 }
 
+rename_tags() {
+    local repo=$1
+    local tsv=$2
+    [ -f "$tsv" ] || { warn "File not found: $tsv"; return 1; }
+
+    grep -v '^#' "$tsv" | while IFS=$'\t' read -r old_tag new_tags; do
+        [ -z "$old_tag" ] && continue
+        for new_tag in $new_tags; do
+            [ -z "$new_tag" ] && continue
+            run git -C "$repo" tag "$new_tag" "$old_tag"
+        done
+        #run git -C "$repo" tag -d "$old_tag"
+    done
+}
+
 ORIGINAL_DUMP_FILE="clam-original.svn"
 DUMP_FILE="clam-cleaned.svn"
 REPO_PREFIX="clam-git"
@@ -81,6 +96,7 @@ CHECKSUM_FILES=(
     "repomigrate/cli.py"
     "import.lift"
     "emptycommits.tsv"
+    "tag-rename.tsv"
 )
 
 next_repo() {
@@ -135,6 +151,9 @@ run reposurgeon "read --preserve <$DUMP_FILE" "script import.lift" "rebuild $REP
 
 #step Tag releases from tarballs
 run tag_from_tsv "$REPO_DIR" tarball-revisions.tsv
+
+step Rename tags from tag-rename.tsv
+run rename_tags "$REPO_DIR" tag-rename.tsv
 
 success "Done: $REPO_DIR"
 

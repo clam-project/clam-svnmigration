@@ -2,6 +2,7 @@ SMSTools2-0-0-1-post-rel	SMSTools2-0_0_1-post-rel
 SMSTools2-0-1-2-rel	SMSTools2-0_1_2-rel	
 release_0_1	Voice2MIDI-0_1-rel
 v0_3-rel	SMSTools-0_3-rel
+v0_2-rel	NetworkEditor-0_2-rel	Voice2MIDI-0_2-rel
 v0_1-rel	Annotator-0_1-rel
 v0_4_0-rel	SMSTools-0_4_0-rel
 v0_2_0-rel	Annotator-0_2_0-rel
@@ -9,67 +10,67 @@ v0_3_0-rel	NetworkEditor-0_3_0-rel
 v0_3_1-rel	NetworkEditor-0_3_1-rel
 v0_4_1-rel	SMSTools-0_4_1-rel
 v0_3_2-rel	NetworkEditor-0_3_2-rel	Annotator-0_3_2-rel
-Release0_4	CLAM-0_4-rel
+Release0_4-rel	CLAM-0_4-rel
 release-0_4-rel	CLAM-0_4-linux-rel 
-CLAM-0_4_1-rel	927	trunk
-CLAM-devel-0_4_2-pre-rel	1078	branches/development-branch
-CLAM-devel-0_4_2-pre3-rel	1265	branches/development-branch
-CLAM-0_4_2-rel	1280	trunk
-CLAM-devel-0_5_0-pre1-rel	2515	branches/development-branch
-CLAM-devel-0_5_0-pre2-rel	2548	branches/development-branch
-CLAM-devel-0_5_0-pre3-rel	2642	branches/development-branch
-CLAM-0_5_0-rel	2644	trunk
-CLAM-devel-0_5_1-pre1-rel	2672	branches/development-branch
-CLAM-devel-0_5_1-pre2-rel	2852	branches/development-branch
-CLAM-Devel-0_5_1-pre3-rel	2890	branches/development-branch
-CLAM-devel-0_5_1-pre3-rel	2900	branches/development-branch
-CLAM-0_5_1-rel	2902	trunk
-CLAM-devel-0_5_2-pre1-rel	3027	branches/development-branch
-CLAM-devel-0_5_2-pre2-rel	3047	branches/development-branch
-CLAM-0_5_2-rel	3053	trunk
-CLAM-devel-0_5_3-pre-rel	3236	branches/development-branch
-CLAM-0_5_3-rel	3267	trunk
-CLAM-devel-0_5_4-pre0-rel	3392	branches/development-branch
-CLAM-devel-0_5_4-pre-rel	3422	branches/development-branch
-CLAM-0_5_4-rel	3424	trunk
-CLAM-devel-0_5_5-pre1-rel	3552	branches/development-branch
-CLAM-devel-0_5_5-pre2-rel	3561	branches/development-branch
-CLAM-0_5_5-rel	3563	trunk
-CLAM-0_5_6-pre-rel	3899	branches/development-branch
-CLAM-0_5_6-rel	3899	branches/development-branch
-CLAM-devel-0_5_6-pre1-rel	3899	branches/development-branch
-CLAM-devel-0_5_7-pre1-rel	3992	branches/development-branch
-CLAM-0_5_7-pre1-rel	4006	trunk
-CLAM-devel-0_5_7-pre2-rel	4010	branches/development-branch
-CLAM-devel-0_5_7-rel	4010	branches/development-branch
-CLAM-0_5_7-pre2-rel	4013	trunk
-CLAM-0_5_7-rel	4013	trunk
-CLAM-devel-0_6_0-pre1-rel	4298	branches/development-branch
-CLAM-devel-0_6_0-rel	4298	branches/development-branch
-CLAM-0_6_0-pre1-rel	4302	trunk
-CLAM-0_6_0-rel	4302	trunk
-CLAM-devel-0_6_1-pre1-rel	4739	branches/development-branch
-CLAM-devel-0_6_1-pre2-rel	4746	branches/development-branch
-CLAM-devel-0_6_1-pre3-rel	4754	branches/development-branch
-CLAM-0_6_1-pre1-rel	4757	trunk
-CLAM-0_6_1-pre2-rel	4759	trunk
-CLAM-devel-0_6_1-pre4-rel	4761	branches/development-branch
-CLAM-0_6_1-pre3-rel	4763	trunk
-CLAM-devel-0_6_1-pre5-rel	4765	branches/development-branch
-CLAM-devel-0_6_1-rel	4765	branches/development-branch
-CLAM-0_6_1-pre4-rel	4768	trunk
-CLAM-0_6_1-rel	5207	trunk
-CLAM-0_7_0-pre1-rel	5752	branches/development-branch
-CLAM-0_7_0-pre2-rel	5763	branches/development-branch
-CLAM-0_7_0-pre3-rel	5780	branches/development-branch
-CLAM-0_7_0-rel	5784	trunk
-CLAM-devel-post-0_7_0-merge-rel	5802	branches/development-branch
-CLAM-post-0_7_0-merge-rel	5804	trunk
-CLAM-0_8_0-pre1-rel	6447	trunk
-CLAM-0_8_0-pre2-rel	6447	trunk
-CLAM-0_8_0-rel	7010	trunk
-v0_2-maintenance-root	8305	trunk	CLAM_Annotator
-CLAM-0_90_0-rel	8315	trunk
-v0_2-lastmerge	8359	branches/v0_2-maintenance-branch	CLAM_Annotator
-v0_2-lastmerge-rel	8363	branches/v0_2-maintenance-branch	CLAM_Annotator
-CLAM-0_91_0-rel	9023	trunk
+#CLAM-0_4_1-rel	927	trunk
+#CLAM-devel-0_4_2-pre-rel	1078	branches/development-branch
+#CLAM-devel-0_4_2-pre3-rel	1265	branches/development-branch
+#CLAM-0_4_2-rel	1280	trunk
+#CLAM-devel-0_5_0-pre1-rel	2515	branches/development-branch
+#CLAM-devel-0_5_0-pre2-rel	2548	branches/development-branch
+#CLAM-devel-0_5_0-pre3-rel	2642	branches/development-branch
+#CLAM-0_5_0-rel	2644	trunk
+#CLAM-devel-0_5_1-pre1-rel	2672	branches/development-branch
+#CLAM-devel-0_5_1-pre2-rel	2852	branches/development-branch
+#CLAM-Devel-0_5_1-pre3-rel	2890	branches/development-branch
+#CLAM-devel-0_5_1-pre3-rel	2900	branches/development-branch
+#CLAM-0_5_1-rel	2902	trunk
+#CLAM-devel-0_5_2-pre1-rel	3027	branches/development-branch
+#CLAM-devel-0_5_2-pre2-rel	3047	branches/development-branch
+#CLAM-0_5_2-rel	3053	trunk
+#CLAM-devel-0_5_3-pre-rel	3236	branches/development-branch
+#CLAM-0_5_3-rel	3267	trunk
+#CLAM-devel-0_5_4-pre0-rel	3392	branches/development-branch
+#CLAM-devel-0_5_4-pre-rel	3422	branches/development-branch
+#CLAM-0_5_4-rel	3424	trunk
+#CLAM-devel-0_5_5-pre1-rel	3552	branches/development-branch
+#CLAM-devel-0_5_5-pre2-rel	3561	branches/development-branch
+#CLAM-0_5_5-rel	3563	trunk
+#CLAM-0_5_6-pre-rel	3899	branches/development-branch
+#CLAM-0_5_6-rel	3899	branches/development-branch
+#CLAM-devel-0_5_6-pre1-rel	3899	branches/development-branch
+#CLAM-devel-0_5_7-pre1-rel	3992	branches/development-branch
+#CLAM-0_5_7-pre1-rel	4006	trunk
+#CLAM-devel-0_5_7-pre2-rel	4010	branches/development-branch
+#CLAM-devel-0_5_7-rel	4010	branches/development-branch
+#CLAM-0_5_7-pre2-rel	4013	trunk
+#CLAM-0_5_7-rel	4013	trunk
+#CLAM-devel-0_6_0-pre1-rel	4298	branches/development-branch
+#CLAM-devel-0_6_0-rel	4298	branches/development-branch
+#CLAM-0_6_0-pre1-rel	4302	trunk
+#CLAM-0_6_0-rel	4302	trunk
+#CLAM-devel-0_6_1-pre1-rel	4739	branches/development-branch
+#CLAM-devel-0_6_1-pre2-rel	4746	branches/development-branch
+#CLAM-devel-0_6_1-pre3-rel	4754	branches/development-branch
+#CLAM-0_6_1-pre1-rel	4757	trunk
+#CLAM-0_6_1-pre2-rel	4759	trunk
+#CLAM-devel-0_6_1-pre4-rel	4761	branches/development-branch
+#CLAM-0_6_1-pre3-rel	4763	trunk
+#CLAM-devel-0_6_1-pre5-rel	4765	branches/development-branch
+#CLAM-devel-0_6_1-rel	4765	branches/development-branch
+#CLAM-0_6_1-pre4-rel	4768	trunk
+#CLAM-0_6_1-rel	5207	trunk
+#CLAM-0_7_0-pre1-rel	5752	branches/development-branch
+#CLAM-0_7_0-pre2-rel	5763	branches/development-branch
+#CLAM-0_7_0-pre3-rel	5780	branches/development-branch
+#CLAM-0_7_0-rel	5784	trunk
+#CLAM-devel-post-0_7_0-merge-rel	5802	branches/development-branch
+#CLAM-post-0_7_0-merge-rel	5804	trunk
+#CLAM-0_8_0-pre1-rel	6447	trunk
+#CLAM-0_8_0-pre2-rel	6447	trunk
+#CLAM-0_8_0-rel	7010	trunk
+#v0_2-maintenance-root	8305	trunk	CLAM_Annotator
+#CLAM-0_90_0-rel	8315	trunk
+#v0_2-lastmerge	8359	branches/v0_2-maintenance-branch	CLAM_Annotator
+#v0_2-lastmerge-rel	8363	branches/v0_2-maintenance-branch	CLAM_Annotator
+#CLAM-0_91_0-rel	9023	trunk
