@@ -130,7 +130,7 @@
 6448	tags/CLAM-0_8_0-pre1-rel	6447	trunk
 6449	tags/CLAM-0_8_0-pre2-rel	6447	trunk
 6964	tags/v0_3-rel	6963	trunk	CLAM_SMSTools
-7000	tags/v0_2-rel	6999	trunk	CLAM_NetworkEditor	CLAM_Voice2MIDIr	CLAM_SMSTools <- likely by error
+7000	tags/v0_2-rel	6999	trunk	CLAM_NetworkEditor	CLAM_Voice2MIDI	CLAM_SMSTools <- likely by error
 7011	tags/CLAM-0_8_0-rel	7010	trunk
 7012	tags/stable-rel	7010	trunk
 7013	tags/v0_1-rel	7010	trunk	CLAM_Annotator

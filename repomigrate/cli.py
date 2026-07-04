@@ -10,6 +10,7 @@ import requests
 from bs4 import BeautifulSoup
 from consolemsg import step, warn, success, error
 from .preprocess import preprocess
+from .extract_commit_logs import extract_commit_logs
 
 app = typer.Typer(
     help="SVN to Git repository migration tool",
@@ -17,6 +18,7 @@ app = typer.Typer(
 )
 
 app.command()(preprocess)
+app.command()(extract_commit_logs)
 
 
 @app.callback()

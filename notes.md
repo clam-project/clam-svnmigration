@@ -2,24 +2,17 @@
 
 ## TODO
 
-- [x] Ensure the svn revision is part of the git commit metadata -> Added SVN-Revision: trailing with reposurgeon
-- [ ] Tag Releases from `SVN_REVISION` file in tarballs
-    - [x] Extract svn revision from tarballs into a tsv
-    - [x] Turn the tarball cvs into revision -> tag (not tarball, formatting!)
-    - [ ] Apply the release tvs to the repository (the last thing we should do)
-- [ ] Move existing tags in cvs2svn fabricated commits to the parent commit
-    - [ ] Problem: some tags are missplaced due to version tag without subproject name were reused (ie `v0_1-rel, was tagged in different times for SMSTools and NetworkEditor)
-- [x] Unlabeled branches
-    - [x] Understand them -> Branches removed in CVS, its leftovers confused cvs2svn
-    - [x] Remove them
-- [ ] Uniformize branches
-    - [x] Make GraphicsViewNetworkCanvas content to be inside NetworkEditor/ -> rewritten dump to copy trunk instead
-    - [ ] Make partial branches, not partial
-        - [ ] Branches: rewrite the history to include the remaining top level directories
-    - [ ] (optional) Add as the branch as parent of merge commits if it is done in a single commit
-- [ ] Problem: Most tags/branches take only a protion of the project dirs
-- [ ] Remove manufactured commits for tags when the reason is to obtain a partial tag
+- [x] Fix: GraphicsViewNetworkCanvas, a branch without top level directories -> Moved inside Networkdeditor
+- [x] Fix: Partial tags and branches: aplied only to subprojects or specific files -> Turned into full tags and branches
+- [x] Fix: unlabeled branches. -> Analyzed: leftovers of deleted CVS branches, grouped as branch by CVS file branch number, joined files of different branches, non-sense -> Deleted
+- [x] Remove manufactured tags to build partial -> Side effect of making them full tags/branches
+- [x] Annotated: SvnRevision for reference in the log message
+- [x] Empty commits (because branches and tags copies are noop in git) -> Removed Tag, added additional SvnRevision to the log
+- [x] Tarball tags: -> Recovered `SVN_REVISION` from tarbals and tagged
+- [ ] Product aware release tags: As the tag is applied to the full repo, specify in the tag the target product.
+- [ ] Merge commits. -> Only for some. TODO: identify merge commits
 - [ ] Understand V1, INITIAL_IMPORT_RELEASE_TAG, INITIAL_IMPORT_VENDOR_TAG y GNU
+
 
 ## Files
 
@@ -37,6 +30,7 @@ pyproject.toml  ->  python project config
 repomigrate   ->  python script to analyze several aspects of the repo
 svn_repo_loaded   ->  a loaded instance of the original repo
 tags-and-branches.txt   ->   Analysis: for every tag or branch branching commit and where the files come from (
+tags-and-branches.tsv   ->   Rename map from current tag to desired tag name
 tarball-revisions.tsv ->   Analysis: Revisions extracted from tarballs
 tarballs  -> The tarballs
 unlabeled-history.tsv ->  Analysis: Per file operations in unlabeled branches
