@@ -15,4 +15,5 @@ def test_roundtrip_raw():
     assert dump.revisions[-1].nodes[0].content.endswith(
         b';\n\treturn true;\n}\n\n\n\n'
     )
+    assert dump.revisions[-1].fields[b"Revision-number"] == b"15456"
 

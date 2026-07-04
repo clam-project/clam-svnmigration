@@ -11,6 +11,8 @@ def sha1(data: bytes) -> bytes:
 
 REVISION_MARKER = b"Revision-number: "
 NODE_MARKER = b"Node-path: "
+PROPS_END = b"PROPS-END\n"
+
 
 def binaryLength(content):
     if content is None: return None
@@ -62,8 +64,6 @@ class SvnNode:
 
     @classmethod
     def parse(cls, raw: bytes) -> Self:
-        PROPS_END = b"PROPS-END\n"
-
         header, remaining = raw.split(b"\n\n", 1)
         fields = parse_fields(header)
 
@@ -76,6 +76,7 @@ class SvnNode:
                 f"{props_length} {len(properties_chunk)}"
             )
             properties = parse_kv_properties(properties_chunk+PROPS_END)
+
         content = None
         content_length = fields.get(b'Text-content-length', None)
         if content_length is not None:
@@ -148,22 +149,51 @@ class SvnNode:
 @dataclass
 class SvnRevision:
     number: int
+    fields: OrderedDict
+    properties: OrderedDict|None
     header: bytes
     nodes: list[SvnNode]
 
     @classmethod
     def parse(cls, raw: bytes) -> Self:
-        newline = raw.find(b"\n")
-        rev_num = int(raw[len(REVISION_MARKER):newline])
-
         parts = raw.split(NODE_MARKER)
         header = parts[0]
+        raw_fields, remaining = raw.split(b"\n\n", 1)
+        fields = parse_fields(raw_fields)
+        rev_num = int(fields[b"Revision-number"])
+
+        properties = None
+        if PROPS_END in remaining:
+            props_length = int(fields[b"Prop-content-length"].decode())
+            properties_chunk, remaining = remaining.split(PROPS_END, 1)
+            properties_chunk += PROPS_END
+            assert len(properties_chunk) == props_length, (
+                f"{props_length} {len(properties_chunk)}"
+            )
+            properties = parse_kv_properties(properties_chunk+PROPS_END)
+
+        parts = raw.split(NODE_MARKER)
+        properties = parse_kv_properties(parts[0])
         nodes = [SvnNode.parse(NODE_MARKER + part) for part in parts[1:]]
 
-        return cls(number=rev_num, header=header, nodes=nodes)
+        return cls(
+            number=rev_num,
+            fields=fields,
+            properties=properties,
+            header=header,
+            nodes=nodes,
+        )
 
     def dump(self) -> bytes:
-        return self.header + b"".join(node.dump() for node in self.nodes)
+        props = dump_kv_properties(self.properties) or b""
+        if self.properties != None:
+            self.fields[b"Prop-content-length"] = binaryLength(props)
+            self.fields[b"Content-length"] = binaryLength(props)
+
+        result = dump_fields(self.fields) + b"\n\n"
+        result += props + b"\n"
+        result +=  b"".join(node.dump() for node in self.nodes)
+        return result
 
 @dataclass
 class SvnDump:

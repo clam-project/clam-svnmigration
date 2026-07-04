@@ -33,10 +33,10 @@ def preprocess(
     #    log = rev.header
     #    if b"This commit was manufactured" not in log:
     #        continue
-    #    
+    #
     #    success(rev_num)
     #    partial_tag_analysis(rev, rev_num)
-        
+
     step("Completting tags and branches")
     for line in Path('tags-and-branches.tsv').read_bytes().splitlines():
         rev_number, label, rev_number_src, label_src, *projects = line.split(b'\t')
@@ -61,11 +61,6 @@ def preprocess(
 
     step(f"Writing {output_dump_file}")
     output_dump_file.write_bytes(dump.dump())
-        
-        
-
-
-
 
 
 def partial_tag_analysis(rev, rev_num):
@@ -113,7 +108,7 @@ def partial_tag_analysis(rev, rev_num):
         print(f"{sources and b'\n'.join(sources).decode()}")
         return
 
-    
+
 
 
 
