@@ -1,4 +1,6 @@
 __pycache__
 clam-git-*/
-previous/
 generated/
+tarballs
+clam.svn
+clam-orginal.svn
