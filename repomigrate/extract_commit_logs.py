@@ -33,3 +33,4 @@ def extract_commit_logs(
             (output_dir/f"log-{rev_number}.txt").write_bytes(rev.properties[b"svn:log"])
 
 
+

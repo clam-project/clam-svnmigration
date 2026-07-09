@@ -58,12 +58,40 @@ def branch_merge_candidates(
         for branch in edited_branches:
             branches.setdefault(branch, []).append(rev_number)
 
-    for name, revisions in branches.items():
-        print(name, revisions)
+    #for name, revisions in branches.items():
+    #    print(name, revisions)
 
+    ignored_branches = [
+        b'branches/development-branch',
+    ]
 
+    modified_files_per_branch = dict()
+    for branch, revisions in branches.items():
+        if branch == b'trunk': continue
+        if branch.startswith(b'tags'): continue
+        if branch in ignored_branches: continue
 
+        modified = set()
+        for rev_num in revisions:
+            rev = dump.revisions[rev_num]
+            log = (rev.properties.get(b'svn:log') or b'<empty log>').decode()
+            if 'manufactured' in log: continue
+            modified |= {
+                node.fields[b'Node-path'][len(branch) + 1:]
+                for node in rev.nodes
+                if node.fields[b'Node-path'].startswith(branch)
+                and node.fields[b'Node-path'] != branch
+            }
 
+        if not modified:
+            warn(f"Empty branch: {branch.decode()}")
+            continue
+        modified_files_per_branch[branch] = modified
+
+    for name, files in modified_files_per_branch.items():
+        print(name)
+        for file in sorted(files):
+            print(f'\t{file.decode()}')
 
 
 
