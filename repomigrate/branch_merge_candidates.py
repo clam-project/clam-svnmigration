@@ -29,9 +29,17 @@ def branch_merge_candidates(
     data = input_dump_file.read_bytes()
     dump = parse_svndump(data)
 
-    branches = dict()
 
+    step("Split revisions by branches")
+    branches = dict()
     for rev_number, rev in enumerate(dump.revisions):
+        log = (rev.properties.get(b'svn:log') or b"<empty log>").decode()
+        if not rev.nodes:
+            if 'was initially added on branch' in log:
+                # Know case of cvs2svn empty commit
+                continue
+            warn(f"Revision {rev_number} has no nodes\n{log}")
+            continue
         edited_branches = {
             branch for branch in (
                 node_path_branch(node.fields[b'Node-path'])
@@ -39,9 +47,14 @@ def branch_merge_candidates(
             )
             if branch is not None
         }
+        if not edited_branches:
+            continue
+        if edited_branches == {b'trunk', b'branches', b'tags'}:
+            # Initial commit creating the structure
+            edited_branches = {b'trunk'}
+
         if len(edited_branches) != 1:
-            warn(f"Expected single branch revision {rev_number} but found: {b', '.join(edited_branches).decode()}")
-            warn(f"{rev.properties.get(b'svn:log')}")
+            warn(f"Expected single branch revision {rev_number} but found: {b', '.join(edited_branches).decode()}\n{log}")
         for branch in edited_branches:
             branches.setdefault(branch, []).append(rev_number)
 
