@@ -58,12 +58,24 @@ def branch_merge_candidates(
         for branch in edited_branches:
             branches.setdefault(branch, []).append(rev_number)
 
-    #for name, revisions in branches.items():
-    #    print(name, revisions)
+    if False:
+        for name, revisions in branches.items():
+            print(name, revisions)
 
     ignored_branches = [
         b'branches/development-branch',
     ]
+
+    def modified_rev_files(rev_number, branch):
+        rev = dump.revisions[rev_number]
+        log = (rev.properties.get(b'svn:log') or b'<empty log>').decode()
+        if 'manufactured' in log: return set()
+        return {
+            node.fields[b'Node-path'][len(branch) + 1:]
+            for node in rev.nodes
+            if node.fields[b'Node-path'].startswith(branch)
+            and node.fields[b'Node-path'] != branch
+        }
 
     modified_files_per_branch = dict()
     for branch, revisions in branches.items():
@@ -72,26 +84,33 @@ def branch_merge_candidates(
         if branch in ignored_branches: continue
 
         modified = set()
-        for rev_num in revisions:
-            rev = dump.revisions[rev_num]
-            log = (rev.properties.get(b'svn:log') or b'<empty log>').decode()
-            if 'manufactured' in log: continue
-            modified |= {
-                node.fields[b'Node-path'][len(branch) + 1:]
-                for node in rev.nodes
-                if node.fields[b'Node-path'].startswith(branch)
-                and node.fields[b'Node-path'] != branch
-            }
+        for rev_number in revisions:
+            modified |= modified_rev_files(rev_number, branch)
 
         if not modified:
             warn(f"Empty branch: {branch.decode()}")
             continue
+
+        # Special case: This branch has no top level dir
+        if branch == b'branches/GraphicsViewNetworkCanvas':
+            modified = { b'CLAM_NetworkEditor/' + file for file in modified }
+
         modified_files_per_branch[branch] = modified
 
-    for name, files in modified_files_per_branch.items():
-        print(name)
-        for file in sorted(files):
-            print(f'\t{file.decode()}')
+    if False:
+        for name, files in modified_files_per_branch.items():
+            print(name)
+            for file in sorted(files):
+                print(f'\t{file.decode()}')
+
+    for branch, modified in modified_files_per_branch:
+        pass
+        
+        
+
+
+
+
 
 
 
