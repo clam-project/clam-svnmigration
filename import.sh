@@ -141,6 +141,8 @@ generate_empty_commits_lift() {
 
 REPO_DIR=$(next_repo "$REPO_PREFIX" "${CHECKSUM_FILES[@]}")
 
+run svnrdump dump http://clam-project.org/clam > clam.dump
+
 run repomigrate preprocess "${ORIGINAL_DUMP_FILE}" "${DUMP_FILE}"
 
 step Generate emptycommits.lift from emptycommits.tsv
@@ -169,7 +171,7 @@ run git -C "$REPO_DIR" cherry-pick upstream-public/main..upstream-public/qt6_mig
 run git -C "$REPO_DIR" checkout -b ci-multiplatform
 run git -C "$REPO_DIR" cherry-pick upstream-public/qt6_migration_and_ci..upstream-public/ci-multiplatform
 run git -C "$REPO_DIR" checkout main
-#run git -C "$REPO_DIR" remote remove upstream-public
+run git -C "$REPO_DIR" remote remove upstream-public
 
 success "Done: $REPO_DIR"
 
