@@ -9,7 +9,8 @@ v0_2_0-rel	Annotator-0_2_0-rel
 v0_3_0-rel	NetworkEditor-0_3_0-rel
 v0_3_1-rel	NetworkEditor-0_3_1-rel
 v0_4_1-rel	SMSTools-0_4_1-rel
-v0_3_2-rel	NetworkEditor-0_3_2-rel	Annotator-0_3_2-rel
+v0_3_2-rel	NetworkEditor-0_3_2-rel
+#v0_3_2-rel	NetworkEditor-0_3_2-rel	Annotator-0_3_2-rel <- already exists annotator tag
 Release0_4-rel	CLAM-0_4-rel
 release-0_4-rel	CLAM-0_4-linux-rel 
 #CLAM-0_4_1-rel	927	trunk

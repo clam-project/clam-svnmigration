@@ -6,6 +6,7 @@ from consolemsg import step, warn, success
 import typer
 from .svndump import parse_svndump, dump_svndump, SvnNode
 from os.path import commonprefix
+from dataclasses import dataclass
 
 
 def node_path_branch(path):
@@ -28,7 +29,6 @@ def branch_merge_candidates(
     step(f"Reading {input_dump_file}")
     data = input_dump_file.read_bytes()
     dump = parse_svndump(data)
-
 
     step("Split revisions by branches")
     branches = dict()
@@ -80,6 +80,7 @@ def branch_merge_candidates(
 
     ignored_branches = [
         b'branches/development-branch',
+        b'branches/INITIAL_IMPORT_VENDOR_TAG',
     ]
     modified_files_per_branch = dict()
     for branch, revisions in branches.items():
@@ -97,7 +98,7 @@ def branch_merge_candidates(
 
         # Special case: This branch has no top level dir
         if branch == b'branches/GraphicsViewNetworkCanvas':
-            modified = { b'CLAM_NetworkEditor/' + file for file in modified }
+            modified = { b'NetworkEditor/' + file for file in modified }
 
         modified_files_per_branch[branch] = modified
 
@@ -107,12 +108,74 @@ def branch_merge_candidates(
             for file in sorted(files):
                 print(f'\t{file.decode()}')
 
-    last_development_branch_revision = branches[b'branches/development-branch'][-1]
+    development_branch_revisions = branches[b'branches/development-branch']
+    step(f"development-branch {development_branch_revisions[0]}-{development_branch_revisions[-1]}")
+    dev_root = development_branch_revisions[0]
+    dev_tip = development_branch_revisions[-1]
+
+    def branch_parent_revision(branch: bytes, revision_number: int):
+        revisions = branches[branch]
+        from bisect import bisect_left
+        i = bisect_left(revisions, revision_number)
+        if i<=0: return None
+        return revisions[i-1]
 
     for branch, modified in modified_files_per_branch.items():
-        pass
-        
-        
+        SCAN_MARGIN = 3
+        branch_revisions = branches[branch]
+        first_rev = branch_revisions[0]
+        tip_rev = branch_revisions[-1]
+        scan_rev = branch_revisions[-SCAN_MARGIN:][0]
+        nmodified = len(modified_files_per_branch[branch])
+        target_branch = (
+            b'branches/development-branch'
+            if first_rev > dev_root and tip_rev < dev_tip else
+            b'trunk'
+        )
+        print(f"{branch.decode()} {first_rev}-{tip_rev}, scanning from {scan_rev} in {target_branch.decode()}, {nmodified} files changed")
+
+        @dataclass
+        class Candidate:
+            rev_number: int
+            parent: int
+            nshared: int
+            notincommit: int
+            notinmerge: int
+
+            @staticmethod
+            def create(branch: bytes, rev_number: int, merged_files: set[bytes]):
+                commit_files = modified_rev_files(rev_number, branch)
+                nshared = len(commit_files.intersection(merged_files))
+                parent = branch_parent_revision(target_branch, rev_number)
+                notinmerge = len(commit_files - merged_files)
+                notincommit = len(merged_files - commit_files)
+                return Candidate(
+                    rev_number = rev_number,
+                    nshared = nshared,
+                    parent = parent,
+                    notinmerge = notinmerge,
+                    notincommit = notincommit,
+                )
+
+        candidate_revisions = [
+            candidate
+            for candidate in (
+                Candidate.create(branch=target_branch, rev_number=rev_number, merged_files=modified_files_per_branch[branch])
+                for rev_number in branches[target_branch]
+                if rev_number >= scan_rev
+            )
+            if candidate.nshared
+            #and candidate.notinmerge < candidate.nshared
+        ]
+        for candidate in candidate_revisions:
+            print(
+                f"\tRevision: {candidate.rev_number} (parent {candidate.parent})"
+                f"\tto merge ( {candidate.notincommit} ( {candidate.nshared} ) {candidate.notinmerge} ) commit ")
+
+        # TODO: In the target_branch, look for matchability of each revision geater than scan_rev
+        # If there is no coincidence ignore the revision
+        # If there is a coincidence, count matching files, and files in one side not in the other.
+        # Output the merge revision candidate, is current parent and those three counts
 
 
 

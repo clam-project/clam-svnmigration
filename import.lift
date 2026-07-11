@@ -13,8 +13,7 @@ branch delete /unlabeled-/
 # Empty commit tags: append SVN-Revision trailer and delete tag
 script generated/emptycommits.lift
 
-# Hacer GraphicsViewNetworkCanvas parent de ese commit
-#<13429> list
-#<13429> inspect
-<13425>,<13428>,<13429> reparent
-#<13429> inspect
+# Merges from development-branch to trunk
+script generated/merges.lift
+
+

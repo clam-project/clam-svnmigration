@@ -13,6 +13,27 @@ find_commit_by_svn_rev() {
     git -C "$repo" log --all --grep="SVN-Revision: ${rev}$" --format="%H" | head -1
 }
 
+resolve_svn_rev() {
+    local repo=$1
+    local ref=$2
+    if [[ "$ref" =~ ^[0-9]+$ ]]; then
+        echo "$ref"
+    else
+        git -C "$repo" log -1 --format="%B" "$ref" 2>/dev/null \
+            | grep -o "SVN-Revision: [0-9]*" | head -1 | cut -d' ' -f2
+    fi
+}
+
+resolve_commit() {
+    local repo=$1
+    local ref=$2
+    if [[ "$ref" =~ ^[0-9]+$ ]]; then
+        find_commit_by_svn_rev "$ref" "$repo"
+    else
+        git -C "$repo" rev-parse "$ref" 2>/dev/null
+    fi
+}
+
 is_merge_commit() {
     local repo=${2:-.}
     [ "$(git -C "$repo" cat-file -p $1 | grep -c '^parent ')" -ge 2 ]
@@ -21,34 +42,6 @@ is_merge_commit() {
 is_branch() {
     local repo=${2:-.}
     git -C "$repo" rev-parse --verify "$1" >/dev/null 2>&1
-}
-
-make_merge_commit() {
-    local branch=$1
-    local svn_rev=$2
-    local repo=${3:-.}
-
-    local commit=$(find_commit_by_svn_rev "$svn_rev" "$repo")
-    [ -z "$commit" ] && { echo "No commit found with SVN-Revision: ${svn_rev}"; return 1; }
-    is_branch "$branch" "$repo" || { echo "Branch does not exist: $branch"; return 1; }
-    is_merge_commit "$commit" "$repo" && { echo "Already a merge commit: ${commit}"; return 0; }
-
-    local msg=$(git -C "$repo" log -1 --format='%B' ${commit})
-
-    echo "Rewriting ${commit} (SVN-Revision: ${svn_rev}) as merge of ${branch}"
-
-    git -C "$repo" filter-branch --force --commit-filter "
-        if [ \"\$GIT_COMMIT\" = \"${commit}\" ]; then
-            git commit-tree $(git -C "$repo" rev-parse ${commit}^{tree}) \
-                -p $(git -C "$repo" rev-parse ${commit}^) \
-                -p $(git -C "$repo" rev-parse ${branch}) \
-                -m \"${msg}\"
-        else
-            git commit-tree \"\$@\"
-        fi
-    " HEAD
-    step Clean up filter-branch backups
-    git -C "$REPO_DIR" for-each-ref refs/original/ --format='%(refname)' | xargs -I{} git -C "$REPO_DIR" update-ref -d {}
 }
 
 tag_from_tsv() {
@@ -85,6 +78,20 @@ rename_tags() {
     done
 }
 
+generate_merge_commands() {
+    local repo=$1
+    local tsv=$2
+    [ -f "$tsv" ] || { warn "File not found: $tsv"; return 1; }
+    mkdir -p generated
+
+    grep -v '^#' "$tsv" | tail -n +2 | while IFS=$'\t' read -r origin merge parent comments; do
+        [ -z "$origin" ] && continue
+        [ -z "$merge" ] && continue
+
+        echo "<${origin}>,<${parent}>,<${merge}> merge --use-order"
+    done > generated/merges.lift
+}
+
 ORIGINAL_DUMP_FILE="clam-original.svn"
 DUMP_FILE="clam-cleaned.svn"
 REPO_PREFIX="clam-git"
@@ -97,6 +104,7 @@ CHECKSUM_FILES=(
     "import.lift"
     "emptycommits.tsv"
     "tag-rename.tsv"
+    "merges.tsv"
 )
 
 next_repo() {
@@ -138,18 +146,14 @@ run repomigrate preprocess "${ORIGINAL_DUMP_FILE}" "${DUMP_FILE}"
 step Generate emptycommits.lift from emptycommits.tsv
 run generate_empty_commits_lift
 
+step Generate merge commands from merges.tsv
+run generate_merge_commands "$REPO_DIR" merges.tsv
+
 step Import from $DUMP_FILE
-run reposurgeon "read --preserve <$DUMP_FILE" "script import.lift" "rebuild $REPO_DIR"
+#run reposurgeon "read --preserve <$DUMP_FILE" "script import.lift" "rebuild $REPO_DIR"
+run reposurgeon "read <$DUMP_FILE" "script import.lift" "rebuild $REPO_DIR"
 
-# This is done now by fixCamvasBranch directly on the svndump before this script
-#step Fix GraphicsViewNetworkCanvas branch
-#MERGE_BASE=$(git -C "$REPO_DIR" merge-base GraphicsViewNetworkCanvas HEAD)
-#run git -C "$REPO_DIR" filter-repo --force --path-rename :NetworkEditor/ --refs ${MERGE_BASE}..GraphicsViewNetworkCanvas
-
-#step Merge GraphicsViewNetworkCanvas to trunk
-#run make_merge_commit  GraphicsViewNetworkCanvas 13429 $REPO_DIR
-
-#step Tag releases from tarballs
+step Tag releases from tarballs
 run tag_from_tsv "$REPO_DIR" tarball-revisions.tsv
 
 step Rename tags from tag-rename.tsv

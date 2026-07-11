@@ -1,0 +1,245 @@
+origin	merge	parent	comments
+
+## Branches
+
+# typedcontrols: leftovers of a removed or reposurgeon squashed. branch base r11621 merged r12228
+# binary-experiments # discontinued branch
+# imosquera: Voice2MIDI import. reposurgeon lefts it in a single rebased commit
+
+# GraphicsViewNetworkCanvas
+13428	13429	13428	Merge GraphicsViewNetworkCanvas -> trunk
+
+# sroig
+6193	6194	6188	sroig2 en core
+6197	6199	6194	sroig2 en network editor
+/
+# xerces2-porting-branch ->  pre-xercesc23-merge-rel
+# Progressively applied along several commits after the tag
+3739	3743	3742	xerces2-porting-branch
+
+# new header style <- spike, not applied
+# 	root 7075, tip 7659, last mramirez 7455
+#	merge candidates
+#		7754 Voice2Midi
+#		7757 SMSTools
+#		8016 NetworkEditor
+#		8145 Annotator
+
+# srcdeps-build-system
+8554	8555	8553	srcdeps-build-system Single commit unrelated to name and the 'merge' is cleaner than the commit
+
+# CLAM-NewPorts
+4979	4984	4983	CLAM-NewPorts
+
+# libsndfile
+# libsndfile-merge-onto-devel-branch-rel	4145	branches/devel-libsndfile-branch
+# Has two ways merges, and to merge points
+# 4134 first merge tip
+# 4140 first merge onto dev (parent 4139)
+# 4145 second merge tip
+# 4147 second merge onto dev (parent 4142)
+4134	4140	4139	libsndfile, first merge
+4145	4147	4142	libsndfile, forgotten files merge
+
+# amora-PFC
+2179	2188	2187	amora-PFC
+2179	2206	2179	amora-PFC
+
+# experiments-visualization
+#   progressive merge, choosing first:
+#		1367 (parent 1341)
+#		1369 (parent 1367)
+#		1375 (parent 1369)
+#		1378 (parent 1375)
+#		1391 (parent 1384)
+#   then a extra branch forgot commit 1415 and its merge
+#		1417 (parent 1404)
+1364	1367	1341	experimental-visualization
+1415	1417	1404	experimental-visualization (Forgot)
+
+# SMS-Streaming
+#	There was a previous SMS-Streaming branch merged at 1609, before current branch SMS-Streaming started
+#	Progressive merge.
+#		1836 (parent 1833)    to merge ( 182 ( 1 ) 0 ) commit 
+#		1839 (parent 1838)    to merge ( 170 ( 13 ) 0 ) commit 
+#		1840 (parent 1839)    to merge ( 180 ( 3 ) 0 ) commit 
+#		1841 (parent 1840)    to merge ( 175 ( 8 ) 0 ) commit 
+#		1842 (parent 1841)    to merge ( 182 ( 1 ) 0 ) commit 
+#		1843 (parent 1842)    to merge ( 182 ( 1 ) 0 ) commit 
+#	First merge small and unrelated, i prefer to mark the second one.
+1835	1839	1838	SMS-Streaming
+
+# test-example
+1439	1441	1440	test-example
+
+# TODO
+# DT-Inheritance 605-3266
+# 	DT-Inheritance-merge1-rel
+
+## Release TAGS from devel -> trunk
+
+# CLAM-0_4_1-rel	927	trunk
+# trunk: (899) 927 [CLAM-0_4_1-rel]
+# devel: 926
+926	927	899
+
+# TODO
+# 0_4_2 was looong progressive merge in many commits
+# CLAM-devel-0_4_2-pre-rel	1078	branches/development-branch
+# CLAM-devel-0_4_2-pre3-rel	1265	branches/development-branch
+# CLAM-0_4_2-rel	1280	trunk
+# trunk: (927) 1100-1128 1130 1131-1141 1143 1144 1146 1147 1273 1274 1275 1277-1280 [CLAM-0_4_2-rel]
+# devel: 1078 [CLAM-devel-0_4_2-pre-rel] 1099 1129 1142 1145 1148 1230 1238 1241 1244 1249 1252 1255 1257 1258 1264 1265 [CLAM-devel-0_4_2-pre3-rel] 1270-1272
+1099	1100	927		First merge
+1272	1273	1147	Final merge
+
+
+# TODO
+# CLAM-devel-0_5_0-pre1-rel	2515	branches/development-branch
+# CLAM-devel-0_5_0-pre2-rel	2548	branches/development-branch
+# CLAM-post-Albert-Merge-from-Draft-rel	2620	branches/development-branch
+# CLAM-devel-0_5_0-pre3-rel	2642	branches/development-branch
+# CLAM-0_5_0-rel	2644	trunk
+#2642	2590	1983	CLAM-devel-0_5_0-pre3-rel -> trunk
+
+# CLAM-devel-0_5_1-pre1-rel	2672	branches/development-branch
+# CLAM-devel-0_5_1-pre2-rel	2852	branches/development-branch
+# CLAM-Devel-0_5_1-pre3-rel	2890	branches/development-branch
+# CLAM-devel-0_5_1-pre3-rel	2900	branches/development-branch
+# CLAM-0_5_1-rel	2902	trunk
+# Progressive merge into trunk: (2644) 2882 2883 2887 2889 2892 2894 2895 2896 2897 2902 [CLAM-0_5_1-rel]
+# Meanwhile in devel: (2853 [CLAM-devel-0_5_1-pre1-rel]...) 2881 2884 2885 2886 2888 2890 [CLAM-Devel-0_5_1-pre3-rel] 2893 2898 2899 2900 [CLAM-devel-0_5_1-pre3-rel] 
+2881	2882	2644	First merge
+2900	2902	2897	Final release
+
+# CLAM-devel-0_5_2-pre1-rel	3027	branches/development-branch
+# CLAM-devel-0_5_2-pre2-rel	3047	branches/development-branch
+# CLAM-0_5_2-rel	3053	trunk
+# Progressive merge into trunk:  (2902) 3049 3051 3053 [CLAM-0_5_2-rel] 3055 (out of tag but still merge from 0.5.2)
+# Meanwhile in devel: 3029 [CLAM-devel-0_5_2-pre1-rel] 3030-3047 [CLAM-devel-0_5_2-pre2-rel] 3050 3052
+3047	3049	2902	First merge
+3052	3053	3051	Not so final merge
+
+# CLAM-devel-0_5_3-pre-rel	3236	branches/development-branch
+# CLAM-0_5_3-rel	3267	trunk
+# Progressive merge into trunk: (3055) 3239 3240 3241 3246 3247 3267 [CLAM-0_5_3-rel]
+# Meanhile in devel: 3236 [CLAM-devel-0_5_3-pre-rel] 3238 3243 3244 3245 3256-3264
+3238	3239	3055	First merge
+3264	3267	3247	Final release
+
+# CLAM-devel-0_5_4-pre0-rel	3392	branches/development-branch
+# CLAM-devel-0_5_4-pre-rel	3422	branches/development-branch
+# CLAM-0_5_4-rel	3424	trunk
+# trunk: (3267) 3403 3407-3409 3411-3414 3421 3424 [CLAM-0_5_4-rel]
+# devel: 3402 3404-3406 3410 3415-3420 3422 [CLAM-devel-0_5_4-pre-rel]
+3422	3424	3421	
+
+
+# CLAM-devel-0_5_5-pre1-rel	3552	branches/development-branch
+# CLAM-devel-0_5_5-pre2-rel	3561	branches/development-branch
+# CLAM-0_5_5-rel	3563	trunk
+# trunk: (3424) 3550 3554 3563 [CLAM-0_5_5-rel]
+# devel: 3549 3551 3552 [CLAM-devel-0_5_5-pre1-rel] 3555-3560 3561 [CLAM-devel-0_5_5-pre2-rel] 
+3552	3554	3550	CLAM-devel-0_5_5-pre1-rel -> trunk
+3561	3563	3554	CLAM-devel-0_5_5-pre2-rel -> CLAM-0_5_5-rel
+
+# CLAM-0_5_6-pre-rel	3899	branches/development-branch
+# CLAM-0_5_6-rel	3899	branches/development-branch
+# CLAM-devel-0_5_6-pre1-rel	3899	branches/development-branch
+# trunk: (3563) 3895 (refers pre1) 3896-1 (split) 3903 3904 [no tag!]
+# devel: 3894 3896-2 (split) 3897 3898 3899 [CLAM-0_5_6-pre-rel, CLAM-0_5_6-rel, CLAM-devel-0_5_6-pre1-rel]
+3894	3895	3563	First merge
+3899	3903	3896-2	Final release
+
+# TODO: Remaining releases
+
+# CLAM-devel-0_5_7-pre1-rel	3992	branches/development-branch
+# CLAM-0_5_7-pre1-rel	4006	trunk
+# CLAM-devel-0_5_7-pre2-rel	4010	branches/development-branch
+# CLAM-devel-0_5_7-rel	4010	branches/development-branch
+# CLAM-0_5_7-pre2-rel	4013	trunk
+# CLAM-0_5_7-rel	4013	trunk
+3992	4006	3904	CLAM-devel-0_5_7-pre1-rel -> CLAM-0_5_7-pre1-rel
+4010	4013	4006	CLAM-devel-0_5_7-pre2-rel -> CLAM-0_5_7-pre2-rel
+
+# CLAM-devel-0_6_0-pre1-rel	4298	branches/development-branch
+# CLAM-devel-0_6_0-rel	4298	branches/development-branch
+# CLAM-0_6_0-pre1-rel	4302	trunk
+# CLAM-0_6_0-rel	4302	trunk
+4298	4302	4301	CLAM-devel-0_6_0-pre1-rel -> CLAM-0_6_0-pre1-rel
+
+# CLAM-devel-0_6_1-pre1-rel	4739	branches/development-branch
+# CLAM-devel-0_6_1-pre2-rel	4746	branches/development-branch
+# CLAM-devel-0_6_1-pre3-rel	4754	branches/development-branch
+# CLAM-0_6_1-pre1-rel	4757	trunk
+# CLAM-0_6_1-pre2-rel	4759	trunk
+# CLAM-devel-0_6_1-pre4-rel	4761	branches/development-branch
+# CLAM-0_6_1-pre3-rel	4763	trunk
+# CLAM-devel-0_6_1-pre5-rel	4765	branches/development-branch
+# CLAM-devel-0_6_1-rel	4765	branches/development-branch
+# CLAM-0_6_1-pre4-rel	4768	trunk
+# CLAM-0_6_1-rel	5207	trunk
+4765	4768	4763	CLAM-devel-0_6_1-pre5-rel -> CLAM-0_6_1-pre4-rel
+4761	4763	4759	CLAM-devel-0_6_1-pre4-rel -> CLAM-0_6_1-pre3-rel
+4754	4759	4757	CLAM-devel-0_6_1-pre3-rel -> CLAM-0_6_1-pre2-rel
+
+# CLAM-0_7_0-pre1-rel	5752	branches/development-branch
+# CLAM-0_7_0-pre2-rel	5763	branches/development-branch
+# CLAM-0_7_0-pre3-rel	5780	branches/development-branch
+# CLAM-stable-rel	5780	branches/development-branch
+# CLAM-0_7_0-rel	5784	trunk
+
+# CLAM-post-0_7_0-merge-rel	5804	trunk
+# CLAM-devel-post-0_7_0-merge-rel	5802	branches/development-branch
+# The end of the devel branch after 0.7.0 release
+5802	5804	5791	CLAM-devel-post-0_7_0-merge-rel -> CLAM-post-0_7_0-merge-rel # end of development branch
+
+# Release0_4-rel	96	trunk
+# release-0_4-rel	575	trunk
+
+# development-root	96	trunk
+# before-sync-devel-freeze-rel	530	trunk
+# before-sync-maintrunk-freeze-rel	530	trunk
+# removed-synthesis-zero-padding-rel	596	trunk
+# before-devel-to-main-merge-2-rel	734	branches/development-branch
+# before-devel-to-main-merge-3-rel	750	branches/development-branch
+# before-devel-to-main-merge-linux-build-rel	770	branches/development-branch
+# before-devel-to-public-merge-4-rel	797	branches/development-branch
+# merge_exp_vis_050203	801	trunk
+# before-devel-to-main-merge-rel	814	branches/development-branch
+# after-latest-merge-from-devel-rel	816	trunk
+# before-VP-merge-to-public-rel	922	branches/development-branch
+# merge_to_exp_vis_07032003-rel	1329	branches/development-branch
+# sync-w-devel-110303-rel	1364	branches/experimental-visualization-branch
+# sync-w-devel-120303-rel	1415	branches/experimental-visualization-branch
+# test-example-end	1436	branches/CLAM-test-example-branch
+# SMS-Streaming-root	1611	branches/development-branch
+# amora-PFC-root	1719	branches/development-branch
+# before-SMSStreaming-merge-rel	1813	branches/development-branch
+# SMSTools2-0-0-1-post-rel	2963	branches/development-branch
+# SMSTools2-0-1-2-rel	3056	branches/development-branch
+# xerces2-porting-root	3333	branches/development-branch
+# CLAM-devel-beforeNewPorts-root	4456	branches/development-branch
+# CLAM-pre-merge-ports-rel	4976	branches/development-branch
+# CLAM-merge-from-ports-to-devel-rel	4979	branches/CLAM-NewPorts-branch
+# release_0_1	5274	branches/imosquera
+# CLAM-stable-rel	5780	branches/development-branch
+# CLAM-0_8_0-pre1-rel	6447	trunk
+# CLAM-0_8_0-pre2-rel	6447	trunk
+# v0_3-rel	6963	trunk	CLAM_SMSTools
+# v0_2-rel	6999	trunk	CLAM_NetworkEditor	CLAM_Voice2MIDI	CLAM_SMSTools <- likely by error
+# CLAM-0_8_0-rel	7010	trunk
+# stable-rel	7010	trunk
+# v0_1-rel	7010	trunk	CLAM_Annotator
+# CLAM-with-new-header-style-root	7075	trunk
+# srcdeps-build-system-root	8142	trunk
+# v0_4_0-rel	8203	trunk	CLAM_SMSTools
+# v0_2_0-rel	8291	trunk	CLAM_Annotator
+# CLAM-0_90_0-rel	8315	trunk
+# v0_3_0-rel	8315	trunk	CLAM_NetworkEditor
+# v0_2-lastmerge	8359	branches/v0_2-maintenance-branch	CLAM_Annotator
+# v0_2-lastmerge-rel	8363	branches/v0_2-maintenance-branch	CLAM_Annotator
+# v0_3_1-rel	9019	trunk	CLAM_NetworkEditor
+# v0_4_1-rel	9019	trunk	CLAM_SMSTools
+# CLAM-0_91_0-rel	9023	trunk
+# v0_3_2-rel	9315	trunk	CLAM_NetworkEditor	CLAM_Annotator

@@ -9,9 +9,33 @@
 - [x] Annotated: SvnRevision for reference in the log message
 - [x] Empty commits (because branches and tags copies are noop in git) -> Removed Tag, added additional SvnRevision to the log
 - [x] Tarball tags: -> Recovered `SVN_REVISION` from tarbals and tagged
-- [ ] Product aware release tags: As the tag is applied to the full repo, specify in the tag the target product.
-- [ ] Merge commits. -> Only for some. TODO: identify merge commits
+- [x] Product aware release tags: As the tag is applied to the full repo, specify in the tag the target product.
+- [x] Merge commits. -> Done
 - [ ] Understand V1, INITIAL_IMPORT_RELEASE_TAG, INITIAL_IMPORT_VENDOR_TAG y GNU
+- [ ] Solve dual branch commits
+    - [ ] 3723 but found: branches/development-branch, branches/xerces2-porting-branch
+      `Writing and Reading context have moved to their own files`
+        - Weirdly tests are written on devel and production in xerces2
+        - Potser el resultat es moure els tests a xerces2
+    - [ ] 3733 but found: branches/development-branch, branches/xerces2-porting-branch
+      `XMLStorage changes ported`
+    - [ ] 3896 but found: trunk, branches/development-branch
+      `Ops a mudgled merge`
+    - [ ] 5393 but found: trunk, branches/development-branch
+      `+ Ported to new AudioFile interface`
+    - [ ] 5617 but found: trunk, branches/development-branch
+      build system changes`
+    - [ ] 5623 but found: trunk, branches/development-branch
+      `*** empty log message ***`
+    - [ ] 5633 but found: trunk, branches/development-branch
+      `build system changes - macosx compatibility`
+    - [ ] 5657 but found: trunk, branches/development-branch
+      `*** empty log message ***`
+    - [x] 13690 but found: trunk, branches/GraphicsViewNetworkCanvas
+
+
+   
+- [ ] Fix: tags de libsndfile no se collapsan
 
 
 ## Files

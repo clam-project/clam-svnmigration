@@ -24,9 +24,26 @@ def preprocess(
         # Any reference to the branch should include NetworkEditor/
         for node in rev.nodes:
             node.fields[b"Node-path"] = node.fields[b"Node-path"].replace(
-                b"branches/GraphicsViewNetworkCanvas/",
-                b"branches/GraphicsViewNetworkCanvas/NetworkEditor/",
+                b"branches/GraphicsViewNetworkCanvas",
+                b"branches/GraphicsViewNetworkCanvas/NetworkEditor",
             )
+
+    step("Remove mixed rev commit")
+    mixed_revision = dump.revisions[13690]
+    mixed_revision.nodes = [
+        node
+        for node in mixed_revision.nodes
+        if not node.fields[b'Node-path'].startswith(b'branches/GraphicsViewNetworkCanvas')
+    ]
+
+    for rev in dump.revisions:
+        for node in rev.nodes:
+            node_path = node.fields[b'Node-path']
+            if node_path.startswith(b'branches/unlabeled'):
+                parts = node_path.split(b'/')
+                parts[1] = b'BRANCH_FOR_UNLABELED' 
+                node.fields[b'Node-path'] = b'/'.join(parts)
+                
 
     #step("Analyzing partial tags/branches")
     #for rev_num, rev in enumerate(dump.revisions):
