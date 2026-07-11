@@ -141,7 +141,7 @@ generate_empty_commits_lift() {
 
 REPO_DIR=$(next_repo "$REPO_PREFIX" "${CHECKSUM_FILES[@]}")
 
-run svnrdump dump http://clam-project.org/clam > clam.dump
+#run svnrdump dump https://clam-project.org/clam > ${ORIGINAL_DUMP_FILE}
 
 run repomigrate preprocess "${ORIGINAL_DUMP_FILE}" "${DUMP_FILE}"
 
