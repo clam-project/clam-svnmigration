@@ -36,13 +36,14 @@ def preprocess(
         if not node.fields[b'Node-path'].startswith(b'branches/GraphicsViewNetworkCanvas')
     ]
 
-    for rev in dump.revisions:
-        for node in rev.nodes:
-            node_path = node.fields[b'Node-path']
-            if node_path.startswith(b'branches/unlabeled'):
-                parts = node_path.split(b'/')
-                parts[1] = b'BRANCH_FOR_UNLABELED' 
-                node.fields[b'Node-path'] = b'/'.join(parts)
+    #step("Joining all unlabeled branches")
+    #for rev in dump.revisions:
+    #    for node in rev.nodes:
+    #        node_path = node.fields[b'Node-path']
+    #        if node_path.startswith(b'branches/unlabeled'):
+    #            parts = node_path.split(b'/')
+    #            parts[1] = b'BRANCH_FOR_UNLABELED' 
+    #            node.fields[b'Node-path'] = b'/'.join(parts)
                 
 
     #step("Analyzing partial tags/branches")

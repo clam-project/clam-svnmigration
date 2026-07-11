@@ -1,11 +1,19 @@
 prefer git
 set interactive # enables selections
 
+authors read <import.map
+
 =Z list
 
 # SVN revision as git trailer
 =C append "\nSVN-Revision: %LEGACY%" --legacy
 =C filter replace /SVN-Revision: SVN:/SVN-Revision: /c
+
+# expunge files that never had to be there
+expunge CLAM/plugins/timeDomainEffects/ladspa/time_domain_effects_plugins.os
+expunge CLAM/plugins/temporal_oboeSynthesizer/SimpleOboeSynthesizer.xcodeproj/yushen.pbxuser
+expunge CLAM/plugins/expression/.sconsign.dblite
+expunge SMSTools-qt4/draft/build/research.sdif
 
 # Delete unlabeled-[cvs-branch], they are broken leftovers of deleted cvs branches (see notes.md)
 branch delete /unlabeled-/
@@ -15,5 +23,4 @@ script generated/emptycommits.lift
 
 # Merges from development-branch to trunk
 script generated/merges.lift
-
 

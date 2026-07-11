@@ -135,7 +135,7 @@ generate_empty_commits_lift() {
     mkdir -p generated
     tail -n +2 emptycommits.tsv | while IFS=$'\t' read tagged removed; do
         echo "<${tagged}> append \"\\nSVN-Revision: ${removed}\""
-        #echo "tag delete /emptycommit-${removed}/"
+        echo "tag delete /emptycommit-${removed}/"
     done > generated/emptycommits.lift
 }
 
