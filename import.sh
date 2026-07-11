@@ -150,7 +150,6 @@ step Generate merge commands from merges.tsv
 run generate_merge_commands "$REPO_DIR" merges.tsv
 
 step Import from $DUMP_FILE
-#run reposurgeon "read --preserve <$DUMP_FILE" "script import.lift" "rebuild $REPO_DIR"
 run reposurgeon "read <$DUMP_FILE" "script import.lift" "rebuild $REPO_DIR"
 
 step Tag releases from tarballs
@@ -159,6 +158,9 @@ run tag_from_tsv "$REPO_DIR" tarball-revisions.tsv
 step Rename tags from tag-rename.tsv
 run rename_tags "$REPO_DIR" tag-rename.tsv
 
+step Rename master to main
+run git -C "$REPO_DIR" branch -m master main
+
 step Import branches from public repo
 run git -C "$REPO_DIR" remote add upstream-public https://github.com/clam-project/clam.git
 run git -C "$REPO_DIR" fetch upstream-public main qt6_migration_and_ci ci-multiplatform
@@ -166,6 +168,7 @@ run git -C "$REPO_DIR" checkout -b qt6_migration_and_ci
 run git -C "$REPO_DIR" cherry-pick upstream-public/main..upstream-public/qt6_migration_and_ci
 run git -C "$REPO_DIR" checkout -b ci-multiplatform
 run git -C "$REPO_DIR" cherry-pick upstream-public/qt6_migration_and_ci..upstream-public/ci-multiplatform
+run git -C "$REPO_DIR" checkout main
 #run git -C "$REPO_DIR" remote remove upstream-public
 
 success "Done: $REPO_DIR"
