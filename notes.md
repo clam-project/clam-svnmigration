@@ -1,6 +1,6 @@
 # Analysis of the svn -> git migration
 
-## TODO
+## Summary
 
 - [x] Fix: GraphicsViewNetworkCanvas, a branch without top level directories -> Moved inside Networkdeditor
 - [x] Fix: Partial tags and branches: aplied only to subprojects or specific files -> Turned into full tags and branches
@@ -9,10 +9,10 @@
 - [x] Annotated: SvnRevision for reference in the log message
 - [x] Empty commits (because branches and tags copies are noop in git) -> Removed Tag, added additional SvnRevision to the log
 - [x] Tarball tags: -> Recovered `SVN_REVISION` from tarbals and tagged
-- [x] Product aware release tags: As the tag is applied to the full repo, specify in the tag the target product.
+- [x] Product aware release tags: As the tag is applied to the full repo, make the target product as part of the tag name
 - [x] Merge commits. -> Done
 - [ ] Understand V1, INITIAL_IMPORT_RELEASE_TAG, INITIAL_IMPORT_VENDOR_TAG y GNU
-- [ ] Solve dual branch commits
+- [ ] Solve commits altering files of more than one branch
     - [ ] 3723 but found: branches/development-branch, branches/xerces2-porting-branch
       `Writing and Reading context have moved to their own files`
         - Weirdly tests are written on devel and production in xerces2
@@ -96,7 +96,7 @@ Goal: migrate an existing svn repository of 15k+ revisions to git.
     - `-merged`: mark for last time a long branch was merged
 - Tag content synchrony:
     - At some point, subproject versions diverged and some tags do not refer sub-projects (`v0_3_2-rel` vs `Annotator-0_3_2`),
-    - Problem: if we use the same tag for different projects in different momments what happens?
+    - Problem: if we use the same tag for different projects in different momments what happens? -> It doesn't. We started to use 3 version numbers 0.2.0 to avoid collision with similar version 0.2 already used.
     - Observation: For every tag, all subprojects are copied at the same revision.
     - Conclusion: Either we released all projects with the same version during CVS period or cvs2svn lost information.
     - TODO: During CVS period, were all subprojects released with the same version?
