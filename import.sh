@@ -165,13 +165,15 @@ run git -C "$REPO_DIR" branch -m master main
 
 step Import branches from public repo
 run git -C "$REPO_DIR" remote add upstream-public https://github.com/clam-project/clam.git
-run git -C "$REPO_DIR" fetch upstream-public main qt6_migration_and_ci ci-multiplatform stl-threads
+run git -C "$REPO_DIR" fetch upstream-public main qt6_migration_and_ci ci-multiplatform stl-threads python3-scons-branch
 run git -C "$REPO_DIR" checkout -b qt6_migration_and_ci
 run git -C "$REPO_DIR" cherry-pick upstream-public/main..upstream-public/qt6_migration_and_ci
 run git -C "$REPO_DIR" checkout -b stl-threads
 run git -C "$REPO_DIR" cherry-pick upstream-public/qt6_migration_and_ci..upstream-public/stl-threads
 run git -C "$REPO_DIR" checkout -b ci-multiplatform
 run git -C "$REPO_DIR" cherry-pick upstream-public/stl-threads..upstream-public/ci-multiplatform
+run git -C "$REPO_DIR" checkout -b python3-scons-branch
+run git -C "$REPO_DIR" cherry-pick upstream-public/ci-multiplatform..upstream-public/python3-scons-branch
 run git -C "$REPO_DIR" checkout main
 run git -C "$REPO_DIR" remote remove upstream-public
 
